@@ -16,7 +16,7 @@ use std::{str::FromStr, thread, time::Duration};
 pub struct RateLimitGuard;
 
 impl<'r> RocketGovernable<'r> for RateLimitGuard {
-    fn quota(_method: Method, _route_name: &str) -> Quota {
+    fn quota(_method: Option<Method>, _route_name: &str) -> Quota {
         Quota::per_second(Self::nonzero(1u32))
     }
 }
@@ -26,14 +26,14 @@ pub struct RateLimitGuardWithMember {
 }
 
 impl<'r> RocketGovernable<'r> for RateLimitGuardWithMember {
-    fn quota(_method: Method, _route_name: &str) -> Quota {
+    fn quota(_method: Option<Method>, _route_name: &str) -> Quota {
         Quota::with_period(Duration::from_secs(2u64)).unwrap()
     }
 }
 
 pub struct RateLimitGGuard;
 impl<'r> RocketGovernable<'r> for RateLimitGGuard {
-    fn quota(_method: Method, _route_name: &str) -> Quota {
+    fn quota(_method: Option<Method>, _route_name: &str) -> Quota {
         Quota::per_second(Self::nonzero(1u32))
     }
 }
@@ -55,7 +55,7 @@ mod guard2 {
     pub struct RateLimitGuard;
 
     impl<'r> RocketGovernable<'r> for RateLimitGuard {
-        fn quota(_method: Method, route_name: &str) -> Quota {
+        fn quota(_method: Option<Method>, route_name: &str) -> Quota {
             match route_name {
                 "route_hour" => Quota::per_hour(Self::nonzero(1)),
                 "route_multi" => Quota::per_hour(Self::nonzero(4)),

@@ -32,7 +32,7 @@ pub trait RocketGovernable<'r> {
     ///
     /// [Quota]: https://docs.rs/governor/latest/governor/struct.Quota.html
     #[must_use]
-    fn quota(method: Method, route_name: &str) -> Quota;
+    fn quota(method: Option<Method>, route_name: &str) -> Quota;
 
     /// Returns `true` if HTTP rate limit info [headers](crate::header)
     /// should be set in requests.
@@ -137,7 +137,7 @@ mod tests {
     struct RateLimitGuard;
 
     impl<'r> RocketGovernable<'r> for RateLimitGuard {
-        fn quota(_method: Method, _route_name: &str) -> Quota {
+        fn quota(method: Option<Method>, route_name: &str) -> Quota {
             Quota::per_second(Self::nonzero(1u32))
         }
     }

@@ -146,7 +146,7 @@ where
             if let Some(route) = request.route() {
                 if let Some(route_name) = &route.name {
                     let limiter = Registry::get_or_insert::<T>(
-                        route.method,
+                        route.method.expect("route method problem!"),
                         route_name,
                         T::quota(route.method, route_name),
                     );
